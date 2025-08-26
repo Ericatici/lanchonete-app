@@ -1,0 +1,5 @@
+apiVersion: v2 
+appVersion: 1.0.4
+description: The "Lanchonete Na Comanda" chart
+name: lanchonete-na-comanda
+version: 0.1.0 

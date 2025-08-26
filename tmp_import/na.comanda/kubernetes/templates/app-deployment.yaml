@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.service.name }}
+  labels:
+    app: {{ .Values.service.name }}
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.service.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.service.name }}
+    spec:
+      imagePullSecrets:
+      - name: acr-secret
+      containers:
+      - name: {{ .Values.service.name }}
+        image: techchallengelanchoneteacr.azurecr.io/lanchonete-na-comanda:{{ .Chart.AppVersion }}
+        resources:
+          requests:
+            cpu: {{ .Values.deployment.cpuRequest }}
+            memory: {{ .Values.deployment.memoryRequest }}
+          limits:
+            cpu: {{ .Values.deployment.cpuLimit }}
+            memory: {{ .Values.deployment.memoryLimit }}
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DATABASE_HOST
+          value: mysql-service
+        envFrom: 
+        - secretRef:
+            name: {{ .Values.service.name }} 
+        - secretRef:
+            name: mysql-secret
+        - configMapRef:
+            name: {{ .Values.service.name }} 
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
