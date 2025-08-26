@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.service.name }}
+data:
+  mercadopago-base-url: "https://api.mercadopago.com"
+  mercadopago-auth-path: "/oauth/token"
+  mercadopago-orders-path: "/v1/orders"
+  mercadopago-external-pos-id: "nacomanda2025"
