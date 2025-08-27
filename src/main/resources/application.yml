@@ -1,0 +1,30 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://${database-host}/${database-name}${database-extra-params:?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: ${database-user}
+    password: ${database-password}
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+mercadopago:
+  baseUrl: ${mercadopago-base-url:https://api.mercadopago.com}
+  externalPosId: ${mercadopago-external-pos-id:nacomanda2025}
+  path:
+    auth: ${mercadopago-url:/oauth/token}
+    orders: ${mercadopago-orders-path:/v1/orders}
+  access:
+    client: ${mercadopago-client-id}
+    secret: ${mercadopago-secret-id}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
