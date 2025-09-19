@@ -1,0 +1,60 @@
+name: App CI/CD
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "lanchonete-app/**"
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "lanchonete-app/**"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Build with Maven
+        run: mvn clean install -DskipTests -f lanchonete-app/pom.xml
+
+      - name: Run Tests
+        run: mvn test -f lanchonete-app/pom.xml
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and Push Docker Image to ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: lanchonete-app
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG lanchonete-app/
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Update Helm Chart and Deploy to EKS
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          aws eks update-kubeconfig --name lanchonete-eks-cluster --region ${{ secrets.AWS_DEFAULT_REGION }}
+          helm upgrade --install lanchonete-app lanchonete-k8s-infra/charts/lanchonete-chart \
+            --set image.repository=${{ steps.login-ecr.outputs.registry }}/lanchonete-app \
+            --set image.tag=${{ github.sha }} \
+            --atomic

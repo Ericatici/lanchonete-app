@@ -1,0 +1,10 @@
+# Maven build artifacts
+/target/
+
+# Environment variables / Secrets
+.env
+*.env
+*.secrets
+
+# Ignore the lanchonete-lambda directory
+lanchonete-lambda/
