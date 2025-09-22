@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lanchonete-app-deployment
+  labels:
+    app: lanchonete-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lanchonete-app
+  template:
+    metadata:
+      labels:
+        app: lanchonete-app
+    spec:
+      containers:
+      - name: lanchonete-app
+        image: 947309778093.dkr.ecr.us-east-2.amazonaws.com/lanchonete-app:latest
+        ports:
+        - containerPort: 8081
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: prod
+        - name: DB_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: DB_ENDPOINT
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: DB_NAME
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: DB_PORT
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:mysql://$(DB_ENDPOINT):$(DB_PORT)/$(DB_NAME)?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: username
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: password

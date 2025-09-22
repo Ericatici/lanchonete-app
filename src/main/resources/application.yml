@@ -1,0 +1,34 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:mysql://terraform-20250916154416506600000001.c5ocyeq8kzuu.us-east-2.rds.amazonaws.com:3306/lanchonetedb?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: admin
+    password: Password123!
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+mercadopago:
+  baseUrl: https://api.mercadopago.com
+  externalPosId: nacomanda2025
+  path:
+    auth: /oauth/token
+    orders: /v1/orders
+  access:
+    client: 1623220512473356
+    secret: 3YmdxrhbJ8VnTS6V51TgKNXmTNxPEXfg
+
+lambda:
+  auth:
+    api:
+      url: https://r6d44dxdyg.execute-api.us-east-2.amazonaws.com/dev
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
