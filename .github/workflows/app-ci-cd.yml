@@ -1,6 +1,5 @@
 name: App CI/CD
 
-<<<<<<< HEAD
 on:
   push:
     branches: ["main"]
@@ -11,19 +10,6 @@ on:
     # paths:
     #   - "lanchonete-app/**"
 
-=======
-#define quando o workflow será executado (push ou pull_request na main)
-on:
-  push:
-    branches: ["main"]
-    paths:
-      - "lanchonete-app/**"
-  pull_request:
-    branches: ["main"]
-    paths:
-      - "lanchonete-app/**"
-#define os jobs (tarefas) que serão executados
->>>>>>> origin/main
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
