@@ -17,6 +17,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Checkout lanchonete-k8s-infra repository
+        uses: actions/checkout@v4
+        with:
+          repository: Ericatici/lanchonete-k8s-infra
+          path: lanchonete-k8s-infra
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
