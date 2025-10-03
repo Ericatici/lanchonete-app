@@ -3,12 +3,12 @@ name: App CI/CD
 on:
   push:
     branches: ["main"]
-    paths:
-      - "lanchonete-app/**"
+    # paths:
+    #   - "lanchonete-app/**"
   pull_request:
     branches: ["main"]
-    paths:
-      - "lanchonete-app/**"
+    # paths:
+    #   - "lanchonete-app/**"
 
 jobs:
   build-and-deploy:
