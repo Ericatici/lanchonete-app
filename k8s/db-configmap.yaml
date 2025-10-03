@@ -3,6 +3,10 @@ kind: ConfigMap
 metadata:
   name: db-config
 data:
+<<<<<<< HEAD
+  DB_ENDPOINT: "lanchonete-db.c5ocyeq8kzuu.us-east-2.rds.amazonaws.com"
+=======
   DB_ENDPOINT: "terraform-20250918195636221000000001.c5ocyeq8kzuu.us-east-2.rds.amazonaws.com"
+>>>>>>> origin/main
   DB_NAME: "lanchonetedb"
   DB_PORT: "3306"
