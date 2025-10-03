@@ -17,6 +17,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Checkout lanchonete-k8s-infra repository
+        uses: actions/checkout@v4
+        with:
+          repository: Ericatici/lanchonete-k8s-infra
+          path: lanchonete-k8s-infra
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -26,11 +33,9 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean install -DskipTests -f ./pom.xml
-        working-directory: ./lanchonete-app
 
       - name: Run Tests
         run: mvn test -f ./pom.xml
-        working-directory: ./lanchonete-app
 
 
       - name: Configure AWS Credentials
@@ -50,7 +55,7 @@ jobs:
           ECR_REPOSITORY: lanchonete-app
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG lanchonete-app/
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: Update Helm Chart and Deploy to EKS
