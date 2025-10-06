@@ -1,5 +1,7 @@
 # Lanchonete Na Comanda Project
 
+This repository contains the core application for the "Lanchonete Na Comanda" system, a self-service solution for fast food restaurants. It focuses on backend development, implementing a hexagonal architecture and providing robust APIs for order, payment, tracking, and administrative functionalities.
+
 ## Architecture Design
 
 * **Business Requirements**:
